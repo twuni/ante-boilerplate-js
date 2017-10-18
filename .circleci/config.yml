@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~
+  working_directory: ~/project
   docker:
   - image: twuni/javascript:1.0.2
 
@@ -23,12 +23,12 @@ jobs:
     - persist_to_workspace:
         root: ~
         paths:
-        - .
+        - project
   build:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~
+        at: ~/project
     - run:
         name: Building assets for production
         command: |
@@ -40,7 +40,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~
+        at: ~/project
     - run:
         name: Checking code style
         command: |
@@ -52,7 +52,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~
+        at: ~/project
     - run:
         name: Scanning dependencies for vulnerabilities
         command: |
@@ -61,7 +61,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~
+        at: ~/project
     - run:
         name: Testing
         command: |
