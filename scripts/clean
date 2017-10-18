@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+SCRIPTS_DIR=$(cd "$(dirname "$0")"; pwd)
+BASE_DIR=$(dirname "${SCRIPTS_DIR}")
+
+for entry in $(grep -vE '^(#|$)' .gitignore | xargs); do
+  rm -vfR "${BASE_DIR}${entry}"
+done

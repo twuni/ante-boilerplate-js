@@ -1,0 +1,60 @@
+{
+  "name": "ante-boilerplate-js",
+  "version": "1.0.0",
+  "description": "Boilerplate for new JavaScript projects.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twuni/ante-boilerplate-js.git"
+  },
+  "author": "Devin Canterberry <devin@twuni.org>",
+  "license": "MIT",
+  "main": "lib",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "scripts/build",
+    "clean": "scripts/clean",
+    "coverage": "scripts/coverage",
+    "documentation": "scripts/documentation",
+    "lint": "scripts/lint",
+    "security": "scripts/security",
+    "test": "scripts/test"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.0",
+    "babel-eslint": "8.0.1",
+    "babel-plugin-istanbul": "4.1.5",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-stage-2": "6.24.1",
+    "babel-register": "6.26.0",
+    "chai": "4.1.2",
+    "commitizen": "^2.9.6",
+    "eslint": "4.9.0",
+    "eslint-plugin-ante": "1.0.0",
+    "jsdoc": "3.5.5",
+    "junit-merge": "1.1.0",
+    "mocha": "4.0.1",
+    "nyc": "11.2.1",
+    "sinon": "4.0.1",
+    "sinon-chai": "2.14.0",
+    "snyk": "1.43.0"
+  },
+  "nyc": {
+    "include": [
+      "**/index.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  }
+}

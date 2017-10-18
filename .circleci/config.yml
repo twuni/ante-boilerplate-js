@@ -1,0 +1,109 @@
+defaults: &defaults
+  working_directory: ~
+  docker:
+  - image: twuni/javascript:1.0.2
+
+version: 2
+jobs:
+  prepare:
+    <<: *defaults
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-{{ checksum ".nvmrc" }}-yarn-lock-{{ checksum "yarn.lock" }}
+    - run:
+        name: Installing dependencies
+        command: |
+          yarn install --frozen-lockfile
+    - save_cache:
+        key: v1-{{ checksum ".nvmrc" }}-yarn-lock-{{ checksum "yarn.lock" }}
+        paths:
+        - node_modules
+    - persist_to_workspace:
+        root: ~
+        paths:
+        - .
+  build:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~
+    - run:
+        name: Building assets for production
+        command: |
+          NODE_ENV=production yarn build
+    - store_artifacts:
+        path: lib
+
+  lint:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~
+    - run:
+        name: Checking code style
+        command: |
+          mkdir -vp reports/lint
+          yarn lint --format junit --output-file reports/lint/report.xml
+    - store_test_results:
+        path: reports
+  security:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~
+    - run:
+        name: Scanning dependencies for vulnerabilities
+        command: |
+          yarn security
+  test:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~
+    - run:
+        name: Testing
+        command: |
+          mkdir -vp reports/test
+          yarn test --silent --reporter xunit > reports/test/report.xml
+    - store_test_results:
+        path: reports
+    - run:
+        name: Generating code coverage report
+        command: |
+          yarn coverage --report-dir coverage
+    - store_artifacts:
+        path: coverage
+  documentation:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~
+    - run:
+        name: Generate documentation
+        command: |
+          yarn documentation
+    - store_artifacts:
+        path: docs
+
+workflows:
+  version: 2
+  default:
+    jobs:
+    - prepare
+    - build:
+        requires:
+        - prepare
+    - lint:
+        requires:
+        - prepare
+    - test:
+        requires:
+        - prepare
+    - documentation:
+        requires:
+        - prepare
+    - security:
+        requires:
+        - prepare
