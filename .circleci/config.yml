@@ -21,9 +21,9 @@ jobs:
         paths:
         - node_modules
     - persist_to_workspace:
-        root: ~
+        root: .
         paths:
-        - project
+        - .
   build:
     <<: *defaults
     steps:
