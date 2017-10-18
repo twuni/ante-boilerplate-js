@@ -28,7 +28,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~/project
+        at: .
     - run:
         name: Building assets for production
         command: |
@@ -40,7 +40,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~/project
+        at: .
     - run:
         name: Checking code style
         command: |
@@ -52,7 +52,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~/project
+        at: .
     - run:
         name: Scanning dependencies for vulnerabilities
         command: |
@@ -61,7 +61,7 @@ jobs:
     <<: *defaults
     steps:
     - attach_workspace:
-        at: ~/project
+        at: .
     - run:
         name: Testing
         command: |
