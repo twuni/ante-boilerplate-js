@@ -56,7 +56,11 @@ jobs:
     - run:
         name: Scanning dependencies for vulnerabilities
         command: |
-          yarn security
+          if [ -n "${SNYK_TOKEN}" ]; then
+            yarn security
+          else
+            echo 'Missing authorization for snyk.io; skipping vulnerability scan'
+          fi
   test:
     <<: *defaults
     steps:
