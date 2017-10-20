@@ -66,7 +66,7 @@ jobs:
         name: Testing
         command: |
           mkdir -vp reports/test
-          yarn test --silent --reporter xunit > reports/test/report.xml
+          yarn --silent test --reporter xunit > reports/test/report.xml
     - store_test_results:
         path: reports
     - run:
