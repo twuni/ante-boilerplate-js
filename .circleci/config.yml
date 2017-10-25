@@ -30,14 +30,14 @@ jobs:
         name: Checking code style
         command: |
           mkdir -vp reports/lint
-          yarn lint --format junit --output-file reports/lint/report.xml
+          yarn lint --format junit --output-file reports/lint/junit.xml
     - store_test_results:
         path: reports
     - run:
         name: Testing
         command: |
           mkdir -vp reports/test
-          yarn --silent test --reporter xunit > reports/test/report.xml
+          yarn --silent test --reporter xunit > reports/test/junit.xml
     - store_test_results:
         path: reports
     - run:
