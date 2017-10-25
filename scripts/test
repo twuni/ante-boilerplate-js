@@ -31,7 +31,7 @@ run_tests() {
   (
     cd "${SOURCE_DIR}"
     find . -type f -name spec.js | NODE_ENV=test xargs "${NYC}" --silent --temp-directory "${BASE_DIR}/.nyc" "${MOCHA}" $* \
-      --compilers js:babel-register \
+      --require babel-register \
       --require babel-polyfill \
       spec.setup.js
   ) || EXIT_CODE=1
