@@ -1,11 +1,11 @@
 defaults: &defaults
   working_directory: ~/project
   docker:
-  - image: twuni/javascript:1.0.2
+  - image: twuni/javascript:1.0.3
 
 version: 2
 jobs:
-  prepare:
+  build:
     <<: *defaults
     steps:
     - checkout
@@ -20,27 +20,12 @@ jobs:
         key: v1-{{ checksum ".nvmrc" }}-yarn-lock-{{ checksum "yarn.lock" }}
         paths:
         - node_modules
-    - persist_to_workspace:
-        root: .
-        paths:
-        - .
-  build:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Building assets for production
         command: |
           NODE_ENV=production yarn build
     - store_artifacts:
         path: lib
-
-  lint:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Checking code style
         command: |
@@ -48,24 +33,6 @@ jobs:
           yarn lint --format junit --output-file reports/lint/report.xml
     - store_test_results:
         path: reports
-  security:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
-    - run:
-        name: Scanning dependencies for vulnerabilities
-        command: |
-          if [ -n "${SNYK_TOKEN}" ]; then
-            yarn security
-          else
-            echo 'Missing authorization for snyk.io; skipping vulnerability scan'
-          fi
-  test:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Testing
         command: |
@@ -79,35 +46,23 @@ jobs:
           yarn coverage --report-dir coverage
     - store_artifacts:
         path: coverage
-  documentation:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Generate documentation
         command: |
           yarn documentation
     - store_artifacts:
         path: docs
+    - run:
+        name: Scanning dependencies for vulnerabilities
+        command: |
+          if [ -n "${SNYK_TOKEN}" ]; then
+            yarn security
+          else
+            echo 'Missing authorization for snyk.io; skipping vulnerability scan'
+          fi
 
 workflows:
   version: 2
   default:
     jobs:
-    - prepare
-    - build:
-        requires:
-        - prepare
-    - lint:
-        requires:
-        - prepare
-    - test:
-        requires:
-        - prepare
-    - documentation:
-        requires:
-        - prepare
-    - security:
-        requires:
-        - prepare
+    - build
