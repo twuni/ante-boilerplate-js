@@ -1,11 +1,11 @@
 defaults: &defaults
-  working_directory: ~/project
+  working_directory: ~
   docker:
-  - image: twuni/javascript:1.0.2
+  - image: twuni/javascript:1.0.3
 
 version: 2
 jobs:
-  prepare:
+  build:
     <<: *defaults
     steps:
     - checkout
@@ -20,39 +20,42 @@ jobs:
         key: v1-{{ checksum ".nvmrc" }}-yarn-lock-{{ checksum "yarn.lock" }}
         paths:
         - node_modules
-    - persist_to_workspace:
-        root: .
-        paths:
-        - .
-  build:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Building assets for production
         command: |
           NODE_ENV=production yarn build
     - store_artifacts:
         path: lib
-
-  lint:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
     - run:
         name: Checking code style
         command: |
-          mkdir -vp reports/lint
-          yarn lint --format junit --output-file reports/lint/report.xml
+          mkdir -vp reports
+          yarn lint --format junit --output-file reports/eslint.xml
     - store_test_results:
         path: reports
-  security:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
+    - store_artifacts:
+        path: reports
+    - run:
+        name: Testing
+        command: |
+          mkdir -vp reports/junit
+          yarn --silent test --reporter xunit > reports/junit/test-results.xml
+    - store_test_results:
+        path: reports/junit
+    - store_artifacts:
+        path: reports/junit
+    - run:
+        name: Generating code coverage report
+        command: |
+          yarn coverage --report-dir coverage
+    - store_artifacts:
+        path: coverage
+    - run:
+        name: Generate documentation
+        command: |
+          yarn documentation
+    - store_artifacts:
+        path: docs
     - run:
         name: Scanning dependencies for vulnerabilities
         command: |
@@ -61,53 +64,3 @@ jobs:
           else
             echo 'Missing authorization for snyk.io; skipping vulnerability scan'
           fi
-  test:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
-    - run:
-        name: Testing
-        command: |
-          mkdir -vp reports/test
-          yarn --silent test --reporter xunit > reports/test/report.xml
-    - store_test_results:
-        path: reports
-    - run:
-        name: Generating code coverage report
-        command: |
-          yarn coverage --report-dir coverage
-    - store_artifacts:
-        path: coverage
-  documentation:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: .
-    - run:
-        name: Generate documentation
-        command: |
-          yarn documentation
-    - store_artifacts:
-        path: docs
-
-workflows:
-  version: 2
-  default:
-    jobs:
-    - prepare
-    - build:
-        requires:
-        - prepare
-    - lint:
-        requires:
-        - prepare
-    - test:
-        requires:
-        - prepare
-    - documentation:
-        requires:
-        - prepare
-    - security:
-        requires:
-        - prepare
