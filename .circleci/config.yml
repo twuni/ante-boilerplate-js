@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/project
+  working_directory: ~
   docker:
   - image: twuni/javascript:1.0.3
 
@@ -29,16 +29,20 @@ jobs:
     - run:
         name: Checking code style
         command: |
-          mkdir -vp reports/junit
-          yarn lint --format junit --output-file reports/junit/lint.xml
+          mkdir -vp reports
+          yarn lint --format junit --output-file reports/eslint.xml
     - store_test_results:
-        path: reports/junit
+        path: reports
+    - store_artifacts:
+        path: reports
     - run:
         name: Testing
         command: |
           mkdir -vp reports/junit
-          yarn --silent test --reporter xunit > reports/junit/test.xml
+          yarn --silent test --reporter xunit > reports/junit/test-results.xml
     - store_test_results:
+        path: reports/junit
+    - store_artifacts:
         path: reports/junit
     - run:
         name: Generating code coverage report
