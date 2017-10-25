@@ -29,17 +29,17 @@ jobs:
     - run:
         name: Checking code style
         command: |
-          mkdir -vp reports/lint
-          yarn lint --format junit --output-file reports/lint/junit.xml
+          mkdir -vp reports/junit
+          yarn lint --format junit --output-file reports/junit/lint.xml
     - store_test_results:
-        path: reports
+        path: reports/junit
     - run:
         name: Testing
         command: |
-          mkdir -vp reports/test
-          yarn --silent test --reporter xunit > reports/test/junit.xml
+          mkdir -vp reports/junit
+          yarn --silent test --reporter xunit > reports/junit/test.xml
     - store_test_results:
-        path: reports
+        path: reports/junit
     - run:
         name: Generating code coverage report
         command: |
