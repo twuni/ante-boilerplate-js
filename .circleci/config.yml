@@ -60,9 +60,3 @@ jobs:
           else
             echo 'Missing authorization for snyk.io; skipping vulnerability scan'
           fi
-
-workflows:
-  version: 2
-  default:
-    jobs:
-    - build
