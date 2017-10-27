@@ -1,7 +1,5 @@
 # Ante Boilerplate for JavaScript Projects
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/twuni/ante-boilerplate-js.svg)](https://greenkeeper.io/)
-
 [![CircleCI](https://circleci.com/gh/twuni/ante-boilerplate-js.svg?style=svg)](https://circleci.com/gh/twuni/ante-boilerplate-js)
 
 This project simply provides the boilerplate for your JavaScript project to support the essential quality tools, including:
