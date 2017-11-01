@@ -45,12 +45,6 @@ jobs:
     - store_artifacts:
         path: reports/junit
     - run:
-        name: Generating code coverage report
-        command: |
-          yarn coverage --report-dir coverage
-    - store_artifacts:
-        path: coverage
-    - run:
         name: Generate documentation
         command: |
           yarn documentation
