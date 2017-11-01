@@ -6,7 +6,6 @@ This project simply provides the boilerplate for your JavaScript project to supp
 
  * API reference documentation generation, via [`jsdoc`](http://usejsdoc.org/).
  * Vulnerability scanning of dependencies, via [`snyk`](https://snyk.io).
- * Code coverage reporting, via [`nyc`](https://istanbul.js.org/).
  * Static analysis, via [`eslint`](https://eslint.org/).
  * Automated testing, via [`mocha`](https://mochajs.org/), using [`chai`](http://chaijs.com/) expectations, and [`sinon`](http://sinonjs.org/) stubs and spies.
  * Modern JavaScript syntax, via [`babel`](https://babeljs.io/).
