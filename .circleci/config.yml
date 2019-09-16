@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  v12: "twuni/nodejs@12.6.0"
+  v12: "twuni/nodejs@12.10.0
 
 workflows:
   v12:
