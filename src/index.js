@@ -1,2 +1,2 @@
-// Compatibility shim.
-import '@babel/polyfill';
+// Compatibility shim for async/await syntax
+import 'regenerator-runtime/runtime';
